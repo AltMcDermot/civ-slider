@@ -1,0 +1,26 @@
+#featured{
+    max-width: 960px;
+    margin: auto;
+    height: 480px;
+}
+.slide{
+	height:100%;
+	width:100%;
+}
+.slide h2{
+	position: absolute;
+	top: 5%;
+	left: 5%;
+	font-size: 2em;
+	background-color: rgba( 0,0,0, 0.4);
+}
+.slide h2 a{
+	color: #fff;
+}
+.slide span p{
+	display: inline-block;
+	position: absolute;
+	color: #fff;
+	bottom: 10%;
+	background-color: rgba( 0,0,0, 0.4);
+}

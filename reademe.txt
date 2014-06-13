@@ -1,0 +1,11 @@
+This is a simple wordpress plugin for featured posts.
+
+If you want the slideshow on your home page, then open Index.php file from “Dashboard” by clicking on Tab “Appearance / Editor” and paste the following piece of code at the suitable place.
+
+if ( function_exists( 'show_slider' ) ) {
+     show_slider(); }
+
+
+When on any "edit post" page, just check the box next to "Check here to add post to homepage slider".
+
+You can reorder the featured posts in the plugin option page under the settings tab.
