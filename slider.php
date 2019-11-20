@@ -1,54 +1,64 @@
 <?php
-// Main function to diplay on front end
 
-function create_civ_db(){
-  global $wpdb;
-  $table_name = $wpdb->prefix . 'civ_slider';
+/**
+ *
+	Main function to diplay on front end
+ */
+function create_civ_db() {
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'civ_slider';
 
-  $sql = "create table $table_name(
+	$sql = "create table $table_name(
   id INT NOT NULL AUTO_INCREMENT, 
   PRIMARY KEY(id),
   post_id int,
   img_order INT)";
 
-  $wpdb->query($sql);
+	$wpdb->query(
+		'create table $table_name(
+	  id INT NOT NULL AUTO_INCREMENT, 
+	  PRIMARY KEY(id),
+	  post_id int,
+	  img_order INT)' 
+	);
 }
 
-add_action('admin_init', 'create_civ_db');
+add_action( 'admin_init', 'create_civ_db' );
 
-// Add the meta box to post/page pages
+add_action( 'add_meta_boxes', 'civ_meta_box' );
 
-add_action('add_meta_boxes', 'civ_meta_box');
-function civ_meta_box(){
+/** 
+	Add the meta box to post/page pages
+ */
+function civ_meta_box() {
 
-  add_meta_box("my box", "Civ Slider","show_my_meta_box", "post");
+	add_meta_box( 'my box', 'Civ Slider','show_my_meta_box', 'post' );
 
-  function show_my_meta_box($post) {
-    // This will count the amount of slides total to 
-    // insert for the slide order 
+	function show_my_meta_box( $post ) {
+		//	This will count the amount of slides total to insert for the slide order .
+		
+		global $wpdb;
+		$table_name  = $wpdb->prefix . 'civ_slider';
+		$row_count   = $wpdb->get_var( 'select count(*) from $table_name' );
+		$slide_count = $row_count + 1;
+		$post_id_check = $post->ID;
 
-    global $wpdb;
-    $table_name = $wpdb->prefix . 'civ_slider';
-    $row_count = $wpdb->get_var( "select count(*) from $table_name");
-    $slide_count = $row_count + 1;
-    // echo $post->ID . "<br>";
-    $post_id_check = $post->ID;
-
-    $box_check = $wpdb->get_row($wpdb->prepare("select * from $table_name where post_id=%d", $post_id_check));
+		$box_check = $wpdb->get_row($wpdb->prepare("select * from $table_name where post_id=%d", $post_id_check));
 ?>
-  <form method="post" >
-    <label>Check here to add post to homepage slider: </label>
-    <input type="checkbox" name="chkd" <?php  if($box_check != null ){echo "checked";} ?> />
-    <input type="hidden" value="<?php echo $post->ID; ?>" name="post_id" />
-    <input type="hidden" value="<?php echo $slide_count; ?>" name="slide_order" />
-  </form>
-<?php
-  }
+	<form method="post" >
+		<label>Check here to add post to homepage slider: </label>
+		<input type="checkbox" name="chkd" <?php  if($box_check != null ){echo "checked";} ?> />
+		<input type="hidden" value="<?php echo $post->ID; ?>" name="post_id" />
+		<input type="hidden" value="<?php echo $slide_count; ?>" name="slide_order" />
+	</form>
+		<?php
+	}
 }
 
-function civ_add_slide($post){
-  // When the post is saved, this will add the 
-  // slide to the featured list.
+/**
+When the post is saved, this will add the slide to the featured list.
+ */
+function civ_add_slide( $post ) {
 
   global $wpdb;
   $table_name = $wpdb->prefix.'civ_slider';
@@ -227,6 +237,3 @@ function show_slider(){
   </section>
   <?php
 }
-?>
-
-
